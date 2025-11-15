@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crispy Gass Poll - Pemesanan Online</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variabel Warna */
+        :root {
+            --primary-orange: #FF5722; /* Oranye Terang, seperti api */
+            --secondary-orange: #E64A19; /* Oranye Lebih Gelap */
+            --dark-background: #1a1a1a; /* Hitam pekat */
+            --light-text: #f0f0f0; /* Teks terang untuk background gelap */
+            --mid-gray: #555; /* Abu-abu untuk detail */
+            --button-add: #4CAF50; /* Hijau untuk tombol tambah */
+            --button-add-hover: #43A047;
+            --button-checkout: #03A9F4; /* Biru terang untuk checkout */
+            --button-checkout-hover: #0288D1;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--dark-background); /* Background hitam */
+            color: var(--light-text); /* Teks terang */
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: #222; /* Sedikit lebih terang dari background utama */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            max-width: 900px; /* Lebar container lebih besar */
+            margin: 30px auto;
+        }
+
+        h1, h2 {
+            font-family: 'Oswald', sans-serif;
+            text-align: center;
+            color: var(--primary-orange); /* Judul oranye */
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2.8em;
+            letter-spacing: 2px;
+        }
+        h2 {
+            font-size: 2em;
+            border-bottom: 2px solid var(--secondary-orange);
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsif, 200px minimum */
+            gap: 25px; /* Jarak antar item */
+            margin-bottom: 30px;
+        }
+
+        .menu-item {
+            background-color: #333; /* Background item menu */
+            border-radius: 8px;
+            overflow: hidden; /* Pastikan gambar tidak keluar dari sudut */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            display: flex; /* Menggunakan flexbox untuk konten item */
+            flex-direction: column; /* Konten vertikal */
+            text-align: center;
+            transition: transform 0.2s ease-in-out;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px); /* Efek hover mengangkat item */
+        }
+
+        .item-image {
+            width: 100%;
+            height: 150px; /* Tinggi gambar tetap */
+            object-fit: cover;
+            border-bottom: 1px solid var(--mid-gray);
+        }
+
+        .item-details {
+            padding: 15px;
+            flex-grow: 1; /* Biarkan detail mengisi ruang yang tersedia */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: var(--light-text);
+            margin-bottom: 5px;
+        }
+
+        .item-price {
+            color: var(--primary-orange); /* Harga dengan warna oranye */
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .add-btn {
+            background-color: var(--button-add);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease;
+            width: calc(100% - 30px); /* Lebar tombol menyesuaikan padding */
+            margin: 0 15px 15px 15px; /* Margin untuk tombol di bagian bawah */
+            align-self: center; /* Posisikan di tengah */
+        }
+        .add-btn:hover {
+            background-color: var(--button-add-hover);
+        }
+
+        #keranjang, #checkout-section {
+            margin-top: 30px;
+            padding: 25px;
+            border: 2px solid var(--primary-orange); /* Border oranye */
+            border-radius: 8px;
+            background-color: #2b2b2b; /* Background lebih terang dari utama, tapi gelap */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        #keranjang h2, #checkout-section h2 {
+            color: var(--light-text);
+            border-bottom: 1px solid var(--mid-gray);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+
+        #keranjang-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #keranjang-list li {
+            padding: 10px 0;
+            border-bottom: 1px dotted var(--mid-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--light-text);
+        }
+        #keranjang-list li:last-child {
+            border-bottom: none;
+        }
+        #total-harga {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: var(--primary-orange); /* Total harga oranye */
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--light-text);
+        }
+        .form-group input {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #444; /* Border input gelap */
+            border-radius: 4px;
+            background-color: #3a3a3a; /* Background input gelap */
+            color: var(--light-text);
+            font-size: 1em;
+        }
+        .form-group input::placeholder {
+            color: #888;
+        }
+
+        #checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--button-checkout); /* Warna tombol checkout */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+        #checkout-btn:hover {
+            background-color: var(--button-checkout-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Crispy Gass Poll</h1>
+        <p style="text-align: center; color: var(--mid-gray);">Pesan Sekarang, Nikmati Nanti!</p>
+
+        <h2>Food</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <img src="ayamcrispy.jpg" alt="Ayam Crispy" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Ayam Crispy</span>
+                    <span class="item-price">Rp 13.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Ayam Crispy', 13000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <img src="ayamcrispy-nasi.jpg" alt="Ayam Crispy + Nasi" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Ayam Crispy + Nasi</span>
+                    <span class="item-price">Rp 18.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Ayam Crispy + Nasi', 18000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <img src="ayamgeprek.jpg" alt="Ayam Geprek" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Ayam Geprek</span>
+                    <span class="item-price">Rp 18.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Ayam Geprek', 18000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <img src="ayamgeprek-nasi.jpg" alt="Ayam Geprek + Nasi" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Ayam Geprek + Nasi</span>
+                    <span class="item-price">Rp 23.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Ayam Geprek + Nasi', 23000)">Tambah Keranjang</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>Drink</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <img src="estehsusu.jpg" alt="Es Teh Susu" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Es Teh Susu</span>
+                    <span class="item-price">Rp 8.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Es Teh Susu', 8000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="esteh.jpg" alt="Es Teh" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Es Teh</span>
+                    <span class="item-price">Rp 5.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Es Teh', 5000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="esjeruk.jpg" alt="Es Jeruk" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Es Jeruk</span>
+                    <span class="item-price">Rp 5.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Es Jeruk', 5000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="esjossu.jpg" alt="Es Josssu" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Es Josssu</span>
+                    <span class="item-price">Rp 8.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Es Josssu', 8000)">Tambah Keranjang</button>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="eskubima.jpg" alt="Es Kunimasu" class="item-image">
+                <div class="item-details">
+                    <span class="item-name">Es Kunimasu</span>
+                    <span class="item-price">Rp 8.000</span>
+                    <button class="add-btn" onclick="tambahKeKeranjang('Es Kunimasu', 8000)">Tambah Keranjang</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="keranjang">
+            <h2>Keranjang Belanja</h2>
+            <ul id="keranjang-list">
+                <li>Keranjang masih kosong.</li>
+            </ul>
+            <div id="total-harga">Total: Rp 0</div>
+        </div>
+
+        <div id="checkout-section">
+            <h2>Data Pemesan</h2>
+            <div class="form-group">
+                <label for="nama">Nama Lengkap:</label>
+                <input type="text" id="nama" placeholder="Masukkan Nama Anda" required>
+            </div>
+            <div class="form-group">
+                <label for="nohp">Nomor Handphone:</label>
+                <input type="tel" id="nohp" placeholder="Contoh: 081234567890" required>
+            </div>
+            <button id="checkout-btn" onclick="checkout()">Check Out (Kirim ke WhatsApp)</button>
+        </div>
+
+    </div>
+
+    <script>
+        const keranjang = [];
+        const nomorToko = "62895620163616"; // Ganti 08 menjadi 62
+
+        function tambahKeKeranjang(nama, harga) {
+            const itemIndex = keranjang.findIndex(item => item.nama === nama);
+
+            if (itemIndex > -1) {
+                keranjang[itemIndex].jumlah++;
+            } else {
+                keranjang.push({
+                    nama: nama,
+                    harga: harga,
+                    jumlah: 1
+                });
+            }
+
+            tampilkanKeranjang();
+        }
+
+        function tampilkanKeranjang() {
+            const listKeranjang = document.getElementById('keranjang-list');
+            const totalHargaElement = document.getElementById('total-harga');
+            let total = 0;
+            let htmlList = '';
+
+            if (keranjang.length === 0) {
+                htmlList = '<li>Keranjang masih kosong.</li>';
+            } else {
+                keranjang.forEach(item => {
+                    const subtotal = item.harga * item.jumlah;
+                    total += subtotal;
+                    htmlList += `
+                        <li>
+                            ${item.jumlah}x ${item.nama}
+                            (Rp ${item.harga.toLocaleString('id-ID')})
+                            = **Rp ${subtotal.toLocaleString('id-ID')}**
+                        </li>
+                    `;
+                });
+            }
+
+            listKeranjang.innerHTML = htmlList;
+            totalHargaElement.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function checkout() {
+            const namaPemesan = document.getElementById('nama').value;
+            const noHpPemesan = document.getElementById('nohp').value;
+
+            if (keranjang.length === 0) {
+                alert("Keranjang belanja Anda masih kosong!");
+                return;
+            }
+
+            if (!namaPemesan || !noHpPemesan) {
+                alert("Mohon lengkapi Nama Lengkap dan Nomor Handphone Anda.");
+                return;
+            }
+
+            // 1. Format rincian pesanan
+            let rincianPesanan = "Halo Crispy Gass Poll! Saya ingin memesan:\n\n";
+            let totalPesanan = 0;
+
+            keranjang.forEach(item => {
+                const subtotal = item.harga * item.jumlah;
+                totalPesanan += subtotal;
+                rincianPesanan += `${item.jumlah}x ${item.nama} - Rp ${subtotal.toLocaleString('id-ID')}\n`;
+            });
+
+            rincianPesanan += `\n*TOTAL PESANAN: Rp ${totalPesanan.toLocaleString('id-ID')}*\n\n`;
+
+            // 2. Tambahkan info pemesan
+            rincianPesanan += "*Data Pemesan:*\n";
+            rincianPesanan += `Nama: ${namaPemesan}\n`;
+            rincianPesanan += `No. HP: ${noHpPemesan}`;
+
+            // 3. Encode pesan untuk URL WhatsApp
+            const pesanEncoded = encodeURIComponent(rincianPesanan);
+
+            // 4. Buat dan buka tautan WhatsApp
+            const whatsappURL = `https://wa.me/${nomorToko}?text=${pesanEncoded}`;
+            window.open(whatsappURL, '_blank');
+
+            alert("Pesanan Anda siap dikirim ke WhatsApp toko. Harap selesaikan pengiriman pesan di aplikasi WhatsApp.");
+        }
+
+        tampilkanKeranjang();
+    </script>
+
+</body>
+</html>
